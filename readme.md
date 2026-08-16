@@ -1,5 +1,4 @@
-
-readme_content = '''# 🔍 SPL Query Health Monitor
+# 🔍 SPL Query Health Monitor
 
 > **Real-Time SPL Query Health Monitoring with Agentic Conflict Resolution & Immutable Audit-Replay**
 >
@@ -283,8 +282,3 @@ Built for **myOnsite Ascend Hackathon 2026**.
 > *"Determinism is not a feature. It is the foundation."*
 '''
 
-with open('/mnt/agents/output/readme.md', 'w') as f:
-    f.write(readme_content)
-
-print("README created successfully!")
-print(f"Length: {len(readme_content)} characters")
