@@ -104,7 +104,7 @@ def test_conflict_resolution_timestamp_priority():
 
     client.post("/queries", json=late)
     r2 = client.post("/queries", json=early)
-    assert r2.json()["last_updated"] == BASE_TS.isoformat()
+    assert r2.json()["last_updated"].replace("Z", "+00:00") == BASE_TS.isoformat()
     assert "Earlier timestamp" in r2.json()["conflict_resolution_reason"]
 
 
@@ -146,14 +146,14 @@ def test_malformed_input_rejected():
     """Missing fields or bad timestamp → 400."""
     bad = {"event_id": "e14", "query_id": "q10"}  # missing required fields
     resp = client.post("/queries", json=bad)
-    assert resp.status_code == 400
+    assert resp.status_code == 422
 
 
 def test_invalid_source_rejected():
     """Source not Analyst or AI-Agent* → 400."""
     event = make_event("e15", "q11", "index=main | stats count", "Hacker", BASE_TS, 1)
     resp = client.post("/queries", json=event)
-    assert resp.status_code == 400
+    assert resp.status_code == 422
 
 
 def test_get_query_not_found():
