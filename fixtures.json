@@ -1,0 +1,22 @@
+[
+  {
+    "id": "fixture_1",
+    "description": "Edge case: empty order book"
+  },
+  {
+    "id": "fixture_2",
+    "description": "Edge case: simultaneous conflicting orders"
+  },
+  {
+    "id": "fixture_3",
+    "description": "Edge case: duplicate order IDs"
+  },
+  {
+    "id": "fixture_4",
+    "description": "Edge case: order quantity exceeds available"
+  },
+  {
+    "id": "fixture_5",
+    "description": "Edge case: stale timestamp replay"
+  }
+]
