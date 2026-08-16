@@ -1,22 +1,86 @@
 [
   {
-    "id": "fixture_1",
-    "description": "Edge case: empty order book"
+    "description": "Basic creation: Analyst creates a healthy query",
+    "event_id": "fix-001",
+    "query_id": "query-alpha",
+    "query_text": "index=main | stats count by host",
+    "source": "Analyst",
+    "timestamp": "2026-08-16T08:00:00+00:00",
+    "version": 1,
+    "expected_state": "GREEN"
   },
   {
-    "id": "fixture_2",
-    "description": "Edge case: simultaneous conflicting orders"
+    "description": "Conflict: AI-Agent overrides Analyst same query",
+    "event_id": "fix-002",
+    "query_id": "query-alpha",
+    "query_text": "index=main | stats count by host",
+    "source": "AI-Agent",
+    "timestamp": "2026-08-16T08:05:00+00:00",
+    "version": 1,
+    "expected_state": "GREEN",
+    "expected_source_after": "AI-Agent",
+    "expected_reason_contains": "AI-Agent > Analyst"
   },
   {
-    "id": "fixture_3",
-    "description": "Edge case: duplicate order IDs"
+    "description": "Deprecated syntax: chained eval → RED",
+    "event_id": "fix-003",
+    "query_id": "query-beta",
+    "query_text": "eval a=1 | eval b=2 | stats count",
+    "source": "Analyst",
+    "timestamp": "2026-08-16T08:10:00+00:00",
+    "version": 1,
+    "expected_state": "RED"
   },
   {
-    "id": "fixture_4",
-    "description": "Edge case: order quantity exceeds available"
+    "description": "Unknown index → AMBER warning state",
+    "event_id": "fix-004",
+    "query_id": "query-gamma",
+    "query_text": "index=legacy_db | stats count",
+    "source": "Analyst",
+    "timestamp": "2026-08-16T08:15:00+00:00",
+    "version": 1,
+    "expected_state": "AMBER"
   },
   {
-    "id": "fixture_5",
-    "description": "Edge case: stale timestamp replay"
+    "description": "Late event with higher version wins despite older timestamp",
+    "event_id": "fix-005",
+    "query_id": "query-delta",
+    "query_text": "index=security | stats count by src_ip",
+    "source": "Analyst",
+    "timestamp": "2026-08-16T10:00:00+00:00",
+    "version": 1,
+    "expected_state": "GREEN"
+  },
+  {
+    "description": "Same query, same source, higher version override",
+    "event_id": "fix-006",
+    "query_id": "query-delta",
+    "query_text": "index=security | stats count by src_ip",
+    "source": "Analyst",
+    "timestamp": "2026-08-16T09:00:00+00:00",
+    "version": 2,
+    "expected_state": "GREEN",
+    "expected_reason_contains": "Higher version: 2 > 1"
+  },
+  {
+    "description": "AI-Agent-v2 outranks AI-Agent-v1",
+    "event_id": "fix-007",
+    "query_id": "query-epsilon",
+    "query_text": "index=firewall | stats count",
+    "source": "AI-Agent-v1",
+    "timestamp": "2026-08-16T08:20:00+00:00",
+    "version": 1,
+    "expected_state": "GREEN"
+  },
+  {
+    "description": "Higher agent version wins",
+    "event_id": "fix-008",
+    "query_id": "query-epsilon",
+    "query_text": "index=firewall | stats count",
+    "source": "AI-Agent-v2",
+    "timestamp": "2026-08-16T08:21:00+00:00",
+    "version": 1,
+    "expected_state": "GREEN",
+    "expected_source_after": "AI-Agent-v2"
   }
 ]
